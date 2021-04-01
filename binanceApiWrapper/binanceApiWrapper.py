@@ -1,4 +1,5 @@
 import requests
+from time import time
 import json
 
 class binanceApi():
@@ -7,15 +8,15 @@ class binanceApi():
         self.secret_key = secret_key
         self.endpoint = endpoint
 
-    def endpointLatency(self):
-        return 1
-
     def systemStatus(self):
         requestUrl = self.endpoint + '/wapi/v3/systemStatus.html'
-        r = requests.get(requestUrl, timeout=1)
-        if r.status_code != 200:
-            return False
-        j = json.loads(r.text)
-        return (j['status'])
-        #self.sessionId = j["inventory"]["uuid"]
-        #print("Session: ", self.sessionId)
+        try:
+            time_before = time()
+            r = requests.get(requestUrl, timeout=1)
+            time_after = time()
+            time_taken = time_after-time_before
+            if r.status_code == 200:
+                j = json.loads(r.text)
+                return (j['status'], time_taken)
+        except Exception as e:
+            return (1, 0)
