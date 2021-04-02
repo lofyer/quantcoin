@@ -1,3 +1,4 @@
+import hmac
 import requests
 from time import time
 import json
